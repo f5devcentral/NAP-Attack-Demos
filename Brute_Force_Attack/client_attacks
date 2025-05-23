@@ -1,0 +1,8 @@
+#!bin/bash
+for n in {1..25};
+do
+  curl -iX POST -d '{"email":"adminuser","password":"$(makepasswd)"}' http://$1/rest/user/login
+done
+
+
+

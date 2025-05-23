@@ -1,0 +1,69 @@
+{
+    "policy": {
+        "name": "BruteForcePolicySpec",
+        "template": {
+            "name": "POLICY_TEMPLATE_NGINX_BASE"
+        },
+        "applicationLanguage": "utf-8",
+        "enforcementMode": "blocking",
+        "blocking-settings": {
+        "violations": [
+		{
+               "alarm" : true,
+               "block" : true,
+               "description" : "Brute Force: Maximum login attempts are exceeded",
+               "learn" : false,
+               "name" : "VIOL_BRUTE_FORCE"
+               }
+        ]
+        },
+        "urls": [
+            {
+                "method": "POST",
+		"isAllowed": true,
+                "name": "/rest/user/login",
+                "protocol": "http",
+                "type": "explicit",
+                "metacharsOnUrlCheck": true
+            }
+        ],
+        "login-pages": [
+            {
+               "accessValidation" : {
+                  "responseHttpStatus": "200"
+               },
+               "authenticationType": "request-body",
+               "url" : {
+                  "method" : "POST",
+                  "name" : "/rest/user/login",
+                  "protocol" : "http",
+                  "type" : "explicit"
+               },
+               "usernameRegex": "\"email\":\"(.*?)\"",
+               "passwordRegex": "\"password\":\"(.*?)\""
+            }
+        ],
+        "brute-force-attack-preventions" : [
+            {
+               "bruteForceProtectionForAllLoginPages" : false,
+               "loginAttemptsFromTheSameIp" : {
+                  "action" : "alarm-and-blocking-page",
+                  "enabled" : true,
+                  "threshold" : 20
+               },
+               "loginAttemptsFromTheSameUser" : {
+                  "action" : "alarm",
+                  "enabled" : true,
+                  "threshold" : 3
+               },
+               "reEnableLoginAfter" : 120,
+               "sourceBasedProtectionDetectionPeriod" : 60,
+               "url": {
+                 "method": "POST",
+                 "name": "/rest/user/login",
+                 "protocol": "http"
+	       }
+            }
+        ]
+    }
+}

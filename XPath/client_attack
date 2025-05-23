@@ -1,0 +1,3 @@
+#!/bin/bash
+curl -iX POST -d@query http://$1/login/
+curl -iX POST -d@XPATH http://$1/login

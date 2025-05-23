@@ -1,0 +1,5 @@
+' or starts-with(name(/*), 'B') or ' 
+' or starts-with(name(/*), 'Bo') or ' 
+' or starts-with(name(/*), 'Boo') or ' 
+' or starts-with(name(/*), 'Book') or ' 
+' or starts-with(name(/*), 'Books') or ' 
