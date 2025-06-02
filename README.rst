@@ -33,7 +33,7 @@ Run the client attack script inside the attack type directory. For example, run 
 Applying NGINX App Protect Policies
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Reference the policy inside the nginx config and reload.
+Reference the policy inside the nginx config.
 
 .. code:: shell
 
@@ -43,6 +43,7 @@ Reference the policy inside the nginx config and reload.
 .. image:: ./images/nginx_config.png
 
  
+Reload NGINX Plus
 
 .. code:: shell
 	nginx -s reload

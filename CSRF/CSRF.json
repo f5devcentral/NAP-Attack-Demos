@@ -1,0 +1,18 @@
+{
+    "policy" : {
+        "name": "app_protect_csrf",
+        "template": { "name": "POLICY_TEMPLATE_NGINX_BASE" },
+	"csrf-protection": {
+		"enabled": true,
+		"expirationTimeInSeconds": "disabled",
+		"sslOnly": false
+	},
+	"csrf-urls": [
+	    {
+        	"enforcementAction": "verify-origin",
+		"method": "any",
+		"url": "*"
+	    }
+	]
+    }
+}
