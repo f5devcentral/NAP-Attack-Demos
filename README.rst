@@ -37,12 +37,13 @@ Reference the policy inside the nginx config and reload.
 
 .. code:: shell
 
-	cp Brute_Force_Attack/BruteForceAttack.json /etc/app-protect/conf 
+	cp Brute_Force_Attack/BruteForceAttack.json /etc/app_protect/conf 
 
 
 .. image:: ./images/nginx_config.png
 
  
+
 .. code:: shell
 	nginx -s reload
 
