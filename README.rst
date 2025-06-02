@@ -19,6 +19,35 @@ Topology
 
 
 
+Running Client Attacks
+~~~~~~~~~~~~~~~~~~~~~~
+
+Run the client attack script inside the attack type directory. For example, run the brute force attack.
+
+.. code:: shell 
+
+	cd Brute_Force_Attack
+	/bin/bash client_attacks <NGINX-ENDPOINT>
+
+
+Applying NGINX App Protect Policies
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Reference the policy inside the nginx config and reload.
+
+.. code:: shell
+
+	cp Brute_Force_Attack/BruteForceAttack.json /etc/app-protect/conf 
+
+
+.. image:: ./images/nginx_config.png
+
+ 
+.. code:: shell
+	nginx -s reload
+
+DONE
+~~~~
 
 
 
