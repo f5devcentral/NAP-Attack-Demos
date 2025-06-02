@@ -46,6 +46,7 @@ Reference the policy inside the nginx config.
 Reload NGINX Plus
 
 .. code:: shell
+
 	nginx -s reload
 
 DONE
