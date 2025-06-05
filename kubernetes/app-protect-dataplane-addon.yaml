@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-protect
+  namespace: nginx-plus
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app-protect
+  template:
+    metadata:
+      labels:
+        app: app-protect
+        app.kubernetes.io/name: app-protect
+    spec:
+      containers:
+      - image: localhost:5000/app-protect-converter:latest
+        imagePullPolicy: IfNotPresent
+        name: app-protect
+        ports:
+        - name: http
+          containerPort: 80
+        - name: https
+          containerPort: 443
+        volumeMounts:
+        - mountPath: /etc/nginx/license.jwt
+          subPath: license.jwt
+          name: license-token
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+      serviceAccount: nginx-plus
+      serviceAccountName: nginx-plus
+      volumes:
+      - name: license-token
+        secret:
+          secretName: license-token

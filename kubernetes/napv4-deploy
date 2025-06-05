@@ -1,0 +1,48 @@
+#!/bin/bash
+
+
+echo "Checking for Docker installation..."
+
+if command -v docker &> /dev/null; then
+    echo "Docker is installed"
+    docker --version
+else
+    echo "Docker is not installed"
+    exit
+fi
+
+echo "Checking for kubectl..."
+if command kubectl &> /dev/null; then
+   echo "kubectl is installed"
+else
+   echo "kubectl is not installed"
+   exit
+fi
+
+#Spin up local container registry
+docker run -d -p 5000:5000 --restart=always --name registry registry:2
+
+#Build NGINX Plus image 
+DOCKER_BUILDKIT=1 docker build --no-cache --secret id=nginx-crt,src=nginx-repo-A-S00017390.crt --secret id=nginx-key,src=nginx-repo-A-S00017390.key -t localhost:5000/app-protect-converter:latest .
+
+#Create ns and sa
+kubectl apply  -f - <<EOF
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: nginx-plus
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: nginx-plus
+  namespace: nginx-plus
+EOF
+
+#Create license secret
+kubectl create ns nginx-plus
+kubectl create secret generic license-token --from-file=license.jwt=<path-to-your-jwt> --type=nginx.com/license -n nginx-plus
+
+#Deploy NGINX Plus App Protect Dataplane Add-On
+kubectl apply -f app-protect-dataplane-addon.yaml 
+echo "Done"
