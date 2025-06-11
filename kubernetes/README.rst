@@ -29,21 +29,12 @@ Verify the deployment is running
 Applying NGINX App Protect Policies
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Reference a policy from an attack-type directory and mount it inside the container. 
+Run the apply_policy script with the policy file you want to mount. 
 
 .. code:: shell
 
-	cp Brute_Force_Attack/BruteForceAttack.json /etc/app_protect/conf 
+	sudo /bin/sh apply_policy <policy-file.json>
 
-
-.. image:: ./images/nginx_config.png
-
- 
-Reload NGINX Plus
-
-.. code:: shell
-
-	nginx -s reload
 
 DONE
 ~~~~
