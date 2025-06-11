@@ -1,39 +1,35 @@
-WAF Test Plan
-=============
+Deploying App Protect in Kubernetes
+===================================
 
-Each directory will correspond to the attack type used to exploit the application we want to protect.
-Each directory will contain test client vectors triggering the correponding attack type, in addition to the App Protect policy used to mitigate the attack. 
+You can deploy NGINX App Protct in a standalone container or in Kubernetes. 
 
 Prerequisites
 ~~~~~~~~~~~~~
 
-- NGINX App Protect Version 4
-
-- A backend application (We use the juicebox application for testing)
-
-Topology
-~~~~~~~~
+-Docker or Kubectl installed on your machine. 
 
 
-.. image:: ./images/WAF_JuiceShop.png
+Deploying NAPv4 in Kubernetes
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-
-
-Running Client Attacks
-~~~~~~~~~~~~~~~~~~~~~~
-
-Run the client attack script inside the attack type directory. For example, run the brute force attack.
+Run the napv4-deploy bash script
 
 .. code:: shell 
 
-	cd Brute_Force_Attack
-	/bin/bash client_attacks <NGINX-ENDPOINT>
+	/bin/bash napv4-deploy <nginx-license-crt> <nginx-license-key> <nginx-license-jwt>
+
+
+Verify the deployment is running 
+
+.. code:: shell
+
+	kubectl get pods -o wide -n nginx-plus
 
 
 Applying NGINX App Protect Policies
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Reference the policy inside the nginx config.
+Reference a policy from an attack-type directory and mount it inside the container. 
 
 .. code:: shell
 

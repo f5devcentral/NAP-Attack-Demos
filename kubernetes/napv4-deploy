@@ -22,8 +22,11 @@ fi
 #Spin up local container registry
 docker run -d -p 5000:5000 --restart=always --name registry registry:2
 
-#Build NGINX Plus image 
-DOCKER_BUILDKIT=1 docker build --no-cache --secret id=nginx-crt,src=nginx-repo-A-S00017390.crt --secret id=nginx-key,src=nginx-repo-A-S00017390.key -t localhost:5000/app-protect-converter:latest .
+#Build NGINX Plus image
+DOCKER_BUILDKIT=1 docker build --no-cache --secret id=nginx-crt,src=$1 --secret id=nginx-key,src=$2 -t localhost:5000/app-protect-converter:latest .
+
+#Push App Protect  image to local registry
+docker push localhost:5000/app-protect-converter:latest
 
 #Create ns and sa
 kubectl apply  -f - <<EOF
@@ -41,7 +44,7 @@ EOF
 
 #Create license secret
 kubectl create ns nginx-plus
-kubectl create secret generic license-token --from-file=license.jwt=<path-to-your-jwt> --type=nginx.com/license -n nginx-plus
+kubectl create secret generic license-token --from-file=license.jwt=$3 --type=nginx.com/license -n nginx-plus
 
 #Deploy NGINX Plus App Protect Dataplane Add-On
 kubectl apply -f app-protect-dataplane-addon.yaml 
