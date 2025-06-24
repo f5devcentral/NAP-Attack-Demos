@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 echo "Checking for Docker installation..."
 
 if command -v docker &> /dev/null; then

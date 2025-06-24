@@ -26,18 +26,15 @@ Verify the deployment is running
 	kubectl get pods -o wide -n nginx-plus
 
 
-Applying NGINX App Protect Policies
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Applying NGINX App Protect Policies and NGINX configuration
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Run the apply_policy script with the policy file you want to mount. 
+Modify the nginx.conf file and run the apply_policy script with the policy file you wish to mount. 
 
 .. code:: shell
 
 	sudo /bin/sh apply_policy <policy-file.json>
 
-
 DONE
 ~~~~
-
-
 
