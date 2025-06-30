@@ -25,11 +25,17 @@ Verify the deployment is running
 
 	kubectl get pods -o wide -n nginx-plus
 
+Deploy the juicebox application in Kubernetes 
+
+.. code:: shell
+	
+        kubectl apply -f juicebox.yaml
+
 
 Applying NGINX App Protect Policies and NGINX configuration
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Modify the nginx.conf file and run the apply_policy script with the policy file you wish to mount. 
+Modify the nginx.conf file and run the apply_policy script with the policy file you wish to apply. 
 
 .. code:: shell
 
