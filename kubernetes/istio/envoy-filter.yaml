@@ -1,0 +1,37 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+  name: sidecar-ext-authz
+  namespace: default  # Must match the namespace of the target workload!
+spec:
+  workloadSelector:
+    labels:
+      app: juicebox  # Change to match the target workload
+  configPatches:
+    - applyTo: HTTP_FILTER
+      match:
+        context: SIDECAR_INBOUND
+        listener:
+          filterChain:
+            filter:
+              name: envoy.filters.network.http_connection_manager
+      patch:
+        operation: INSERT_BEFORE
+        value:
+          name: envoy.filters.http.ext_authz
+          typed_config:
+            "@type": type.googleapis.com/envoy.extensions.filters.http.ext_authz.v3.ExtAuthz
+            http_service:
+              server_uri:
+                uri: http://app-protect-svc.nginx-plus.svc.cluster.local:80
+                cluster: outbound|80||app-protect-svc.nginx-plus.svc.cluster.local
+                timeout: 0.5s
+              authorization_request:
+                allowed_headers:
+                  patterns:
+                    - exact: x-user
+              authorization_response:
+                allowed_upstream_headers:
+                  patterns:
+                    - exact: x-user
+            transport_api_version: V3
