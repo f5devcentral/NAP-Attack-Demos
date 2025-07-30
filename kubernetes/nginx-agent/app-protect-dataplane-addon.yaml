@@ -33,7 +33,10 @@ spec:
         - name: NGINX_AGENT_COMMAND_SERVER_HOST
           value: "agent.connect.nginx.com"
         - name: NGINX_AGENT_COMMAND_AUTH_TOKEN
-          value: "WWXXPjPJDTPyD68NORoKcLEAwKfjgb1/HC5VpkuTtx0="
+          valueFrom:
+            secretKeyRef:
+              name: dataplane-secret
+              key: key
         - name: NGINX_AGENT_COMMAND_TLS_SKIP_VERIFY
           value: "false"
       dnsPolicy: ClusterFirst

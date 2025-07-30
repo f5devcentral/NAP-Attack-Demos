@@ -1,0 +1,54 @@
+#!/bin/bash
+
+echo "Checking for Docker installation..."
+
+if command -v docker &> /dev/null; then
+    echo "Docker is installed"
+    docker --version
+else
+    echo "Docker is not installed"
+    exit
+fi
+
+echo "Checking for kubectl..."
+if command kubectl &> /dev/null; then
+   echo "kubectl is installed"
+else
+   echo "kubectl is not installed"
+   exit
+fi
+
+#Spin up local container registry
+docker run -d -p 5000:5000 --restart=always --name registry registry:2
+
+#Build image NGINX App Protect with Agent
+
+docker build --no-cache --secret id=nginx-crt,src=$1 --secret id=nginx-key,src=$2 -t localhost:5000/app-protect-agent:latest .
+
+#Push App Protect  image to local registry
+docker push localhost:5000/app-protect-agent:latest
+
+#Create ns and sa
+kubectl apply  -f - <<EOF
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: nginx-plus
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: nginx-plus
+  namespace: nginx-plus
+EOF
+
+#Create license secret
+kubectl create ns nginx-plus
+kubectl create secret generic license-token --from-file=license.jwt=$3 --type=nginx.com/license -n nginx-plus
+
+#Create Dataplane Secret for onboarding onto SaaS console.
+kubectl apply -f dataplane-secret.yaml
+
+#Deploy NGINX Plus App Protect Dataplane Add-On with Agent
+kubectl apply -f app-protect-dataplane-addon.yaml 
+echo "Done"
