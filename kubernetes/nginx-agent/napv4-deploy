@@ -47,7 +47,7 @@ kubectl create ns nginx-plus
 kubectl create secret generic license-token --from-file=license.jwt=$3 --type=nginx.com/license -n nginx-plus
 
 #Create Dataplane Secret for onboarding onto SaaS console.
-kubectl apply -f dataplane-secret.yaml
+#kubectl apply -f dataplane-secret.yaml
 
 #Deploy NGINX Plus App Protect Dataplane Add-On with Agent
 kubectl apply -f app-protect-dataplane-addon.yaml 
