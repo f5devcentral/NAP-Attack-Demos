@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: juicebox-deployment
+  name: juiceshop-deployment
   labels:
-    app: juicebox
+    app: juiceshop
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: juicebox
+      app: juiceshop
   template:
     metadata:
       labels:
-        app: juicebox
+        app: juiceshop
     spec:
       containers:
-      - name: juicebox
+      - name: juiceshop
         image: bkimminich/juice-shop:latest
         ports:
         - containerPort: 3000
@@ -23,7 +23,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: juicebox-svc
+  name: juiceshop-svc
 spec:
   ports:
   - port: 80
@@ -31,4 +31,4 @@ spec:
     protocol: TCP
     name: http
   selector:
-    app: juicebox
+    app: juiceshop
