@@ -49,16 +49,63 @@ Virtual Server. You should see the serviceMain virtual server in green status.
 
 3. Navigate to Pools and select web_pool, then select the members tab. As we are running BIG-IP in NodePort mode, the pool members correspond to the Kubernetes cluster nodes, while the ports map to the NodePort of the service being exposed—in this case, the NGINX Ingress Controller. We will confirm this configuration after setting up the NGINX Ingress Controller in Kubernetes. 
 
-.. image:: ./image/Pool-Members.png
+.. image:: ./images/Pool-Members.png
 
 Setting up F5 WAF with NGINX Ingress Controller
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+We will be setting up our Kubernetes cluster from kube-master1.
+SSH >> kube-master1 
 
 First lets verify that F5 NGINX Ingress Controller is running in our cluster. 
 
 .. code:: shell
 	kubectl get pods -o wide -n nginx-ingress
-	kubectl describe pod 
+	kubectl describe pod $(kubectl get pod -l app=nginx-ingress -n nginx-ingress -o jsonpath={.items..metadata.name}) -n nginx-ingress | grep Image
+
+The output indicates the image we are deploying must include F5 WAF with NGINX Plus Ingress Controller. 
+Now we will check the NodePort service exposing NGINX Ingress Controller.
+
+.. code:: shell 
+	kubectl get svc -o wide -n nginx-ingress
+
+The NodePort of the service will align with the pool members configured in BIG-IP.
+
+Deploying the Applications
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now we will deploy the juiceshop and ext-authz application
+
+.. code:: shell
+	kubectl create -f ~/agilitydocs/docs/class1/kubernetes/app-protect-waf/NAP-Attack-Demos/kubernetes/juiceshop.yaml
+	kubectl create -f ~/agilitydocs/docs/class1/kubernetes/app-protect-waf/NAP-Attack-Demos/kubernetes/apps/deployment.yaml
+
+Verify the applications are runnning
+
+.. code::shell 
+	kubectl get pods -o wide
+
+
+Now expose both applications with the NGINX VirtualServer CRDs
+
+.. code::shell 
+	kubectl ~/agilitydocs/docs/class1/kubernetes/app-protect-waf/virtual-server-ext-authz.yaml
+	kubectl ~/agilitydocs/docs/class1/kubernetes/app-protect-waf/virtual-server-juiceshop.yaml
+
+Verify that the VirtualServer CRDs are applied correctly and valid
+
+.. code::shell
+	kubectl get virtualservers.k8s.nginx.org 
+
+Running the Firefox Browser
+~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
+
+Initiating the firefox browser will require to SSH into the provisioner. If you are using webshell, run "su -- cloud-user".
+
+Now you can open firefoc from the ocp-provisioner component
+
+ 
+
 
 Run the client attack script inside the attack type directory. For example, run the brute force attack.
 
@@ -89,6 +136,4 @@ Reload NGINX Plus
 
 DONE
 ~~~~
-
-
 
