@@ -77,25 +77,29 @@ Deploying the Applications
 Now we will deploy the juiceshop and ext-authz application
 
 .. code:: shell
+
 	kubectl create -f ~/agilitydocs/docs/class1/kubernetes/app-protect-waf/NAP-Attack-Demos/kubernetes/juiceshop.yaml
 	kubectl create -f ~/agilitydocs/docs/class1/kubernetes/app-protect-waf/NAP-Attack-Demos/kubernetes/apps/deployment.yaml
 
 Verify the applications are runnning
 
-.. code::shell 
+.. code:: shell
+
 	kubectl get pods -o wide
 
 
 Now expose both applications with the NGINX VirtualServer CRDs
 
-.. code::shell 
+.. code:: shell
+
 	kubectl ~/agilitydocs/docs/class1/kubernetes/app-protect-waf/virtual-server-ext-authz.yaml
 	kubectl ~/agilitydocs/docs/class1/kubernetes/app-protect-waf/virtual-server-juiceshop.yaml
 
 Verify that the VirtualServer CRDs are applied correctly and valid
 
-.. code::shell
-	kubectl get virtualservers.k8s.nginx.org 
+.. code:: shell	
+    
+        kubectl get virtualservers.k8s.nginx.org 
 
 Running the Firefox Browser
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
