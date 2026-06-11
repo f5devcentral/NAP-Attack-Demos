@@ -1,3 +1,4 @@
+
 F5 WAF for NGINX in Kubernetes
 ==============================
 
@@ -60,6 +61,7 @@ SSH >> kube-master1
 First lets verify that F5 NGINX Ingress Controller is running in our cluster. 
 
 .. code:: shell
+
 	kubectl get pods -o wide -n nginx-ingress
 	kubectl describe pod $(kubectl get pod -l app=nginx-ingress -n nginx-ingress -o jsonpath={.items..metadata.name}) -n nginx-ingress | grep Image
 
@@ -67,6 +69,7 @@ The output indicates the image we are deploying must include F5 WAF with NGINX P
 Now we will check the NodePort service exposing NGINX Ingress Controller.
 
 .. code:: shell 
+
 	kubectl get svc -o wide -n nginx-ingress
 
 The NodePort of the service will align with the pool members configured in BIG-IP.
