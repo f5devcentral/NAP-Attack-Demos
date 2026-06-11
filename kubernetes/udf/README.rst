@@ -101,14 +101,98 @@ Verify that the VirtualServer CRDs are applied correctly and valid
     
         kubectl get virtualservers.k8s.nginx.org 
 
-Running the Firefox Browser
-~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
+Running the Firefox Browser and Connect to Applications
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Initiating the firefox browser will require to SSH into the provisioner. If you are using webshell, run "su -- cloud-user".
+Initiating the firefox browser will require to SSH into the ocp-provisioner. If you are using webshell, run "su -- cloud-user".
 
-Now you can open firefoc from the ocp-provisioner component
+Now we can open firefox from the ocp-provisioner.
 
+.. image:: ./image/firefox-udf.png
+
+
+Enter **ext-authz.example.com** in the firefox address bar
+
+.. image:: ./image/firefox-extauthz.png
+
+Enter **juiceshop.example.com** in the firefox address bar
+
+   
+.. image:: ./image/firefox-juiceshop.png
  
+
+Attacking the Applications
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+Now we will run attack vectors against both applications
+Once SSH into kube-master1, run SQL injection attacks against the juiceshop application.
+
+.. code:: shell
+
+	cd ~/agilitydocs/docs/class1/kubernetes/app-protect-waf/NAP-Attack-Demos/SQL_Injection
+	/bin/bash client_attacks juiceshop.example.com
+
+	**Output**
+	{
+    "status": "success",
+    "data": [
+        {
+            "id": 1,
+            "name": "admin@juice-sh.op",
+            "description": "0192023a7bbd73250516f069df18b500",
+            "price": "4",
+            "deluxePrice": "5",
+            "image": "6",
+            "createdAt": "7",
+            "updatedAt": "8",
+            "deletedAt": "9"
+        },
+        {
+            "id": 2,
+            "name": "jim@juice-sh.op",
+            "description": "e541ca7ecf72b8d1286474fc613e5e45",
+            "price": "4",
+            "deluxePrice": "5",
+            "image": "6",
+            "createdAt": "7",
+            "updatedAt": "8",
+            "deletedAt": "9"
+        },
+        {
+            "id": 3,
+            "name": "bender@juice-sh.op",
+            "description": "0c36e517e3fa95aabf1bbffc6744a4ef",
+            "price": "4",
+            "deluxePrice": "5",
+            "image": "6",
+            "createdAt": "7",
+            "updatedAt": "8",
+            "deletedAt": "9"
+        },
+        {
+            "id": 4,
+            "name": "bjoern.kimminich@gmail.com",
+            "description": "6edd9d726cbdc873c539e41ae8757b8c",
+            "price": "4",
+            "deluxePrice": "5",
+            "image": "6",
+            "createdAt": "7",
+            "updatedAt": "8",
+            "deletedAt": "9"
+        },	
+
+
+Done
+
+
+Creating the F5 WAF Policies
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+We are creating two WAF policies, one for each application. 
+
+
+
+
+
 
 
 Run the client attack script inside the attack type directory. For example, run the brute force attack.
