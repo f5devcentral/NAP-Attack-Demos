@@ -299,14 +299,61 @@ If we can hijack the session cookie, we may be able to run a CRSF (Cross Site Re
 Oh NO!! We extract very sensitive information associated to a user! We need to set WAF policies in place to protect these applications from these high severity attacks. May Day May DAY!!!
 	
 
-Creating the F5 WAF Policies
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Creating the JuiceShop WAF Policy
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-We need to create the WAF policy that is approproate for the application. Because juiceshop and ext-authz are different applications with different vulnerabilities, we will create two different WAF policies.
- 
+We need to create the WAF policy that is appropriate for the application. Because juiceshop and ext-authz are different applications with different vulnerabilities, we will create two different WAF policies.
+Lets begin with creating the JuiceShop WAF policy 
+
+
 .. code:: shell
 	
+	cd ~/agilitydocs/docs/class1/kubernetes/app-protect-waf	
+	#Deploy SysLog pod for WAF Security logs. These can be exported to another UDP endpoint.
+	kubectl create -f syslog.pod
+	kubectl create -f ap-log.conf
+	#Deploy the JuiceShop policy
+	kubectl create -f ap-apple-uds.yaml
+	kubectl create -f ap-dataguard-alarm-policy.yaml
+	kubectl create -f waf.yaml
 
+
+Now verify the WAF policy is valid 
+
+.. code:: shell
+
+	kubectl get policies.k8s.nginx.org 
+
+Uncomment the **policies** field in the juiceshop VirtualServer and reapply
+
+.. code:: shell 
+
+	apiVersion: k8s.nginx.org/v1
+kind: VirtualServer
+metadata:
+  name: juiceshop
+spec:
+  host: juiceshop.example.com
+  #uncomment to enable WAF
+  #policies:
+  #- name: waf-policy
+  upstreams:
+  - name: juiceshop
+    service: juiceshop-svc
+    port: 80
+  routes:
+  - path: /
+    action:
+      proxy:
+        upstream: juiceshop
+        requestHeaders:
+          pass: true
+          set:
+          - name: Host
+            value: ' '
+	
+	kubectl apply -f virtual-server-juiceshop.yaml
+	
 
 
 DONE
