@@ -108,23 +108,23 @@ Initiating the firefox browser will require to SSH into the ocp-provisioner. If 
 
 Now we can open firefox from the ocp-provisioner.
 
-.. image:: ./image/firefox-udf.png
+.. image:: ./images/firefox-udf.png
 
 
 Enter **ext-authz.example.com** in the firefox address bar
 
-.. image:: ./image/firefox-extauthz.png
+.. image:: ./images/firefox-extauthz.png
 
 Enter **juiceshop.example.com** in the firefox address bar
 
    
-.. image:: ./image/firefox-juiceshop.png
+.. image:: ./images/firefox-juiceshop.png
  
 
 Attacking the Applications
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 Now we will run attack vectors against both applications
-Once SSH into kube-master1, run SQL injection attacks against the juiceshop application.
+Once you SSH into kube-master1, run SQL injection attacks against the juiceshop application.
 
 .. code:: shell
 
@@ -181,8 +181,99 @@ Once SSH into kube-master1, run SQL injection attacks against the juiceshop appl
         },	
 
 
-Done
+We are able to extract all user information in json format from the juiceshop database via SQL injection.
 
+Now we will run a remote file inclusion attack #Poison Null Type HTTP injection, to extract information from the application not intended for users to see.
+
+.. code:: shell
+	
+	cd ~/agilitydocs/docs/class1/kubernetes/app-protect-waf/NAP-Attack-Demos/Remote_File_Inclusion
+	/bin/bash client_attacks juiceshop.example.com
+
+	**Output**
+	{
+  "name": "juice-shop",
+  "version": "6.2.0-SNAPSHOT",
+  "description": "An intentionally insecure JavaScript Web Application",
+  "homepage": "http://owasp-juice.shop",
+  "author": "Björn Kimminich <bjoern.kimminich@owasp.org> (https://kimminich.de)",
+  "contributors": [
+    "Björn Kimminich",
+    "Jannik Hollenbach",
+    "Aashish683",
+    "greenkeeper[bot]",
+    "MarcRler",
+    "agrawalarpit14",
+    "Scar26",
+    "CaptainFreak",
+    "Supratik Das",
+    "JuiceShopBot",
+    "the-pro",
+    "Ziyang Li",
+    "aaryan10",
+    "m4l1c3",
+    "Timo Pagel",
+    "..."
+  ],
+  "private": true,
+  "keywords": [
+    "web security",
+    "web application security",
+    "webappsec",
+    "owasp",
+    "pentest",
+    "pentesting",
+    "security",
+    "vulnerable",
+    "vulnerability",
+    "broken",
+    "bodgeit"
+  ],
+  "dependencies": {
+    "body-parser": "~1.18",
+    "colors": "~1.1",
+    "config": "~1.28",
+    "cookie-parser": "~1.4",
+    "cors": "~2.8",
+    "dottie": "~2.0",
+    "epilogue-js": "~0.7",
+    "errorhandler": "~1.5",
+    "express": "~4.16",
+    "express-jwt": "0.1.3",
+    "fs-extra": "~4.0",
+    "glob": "~5.0",
+    "grunt": "~1.0",
+    "grunt-angular-templates": "~1.1",
+    "grunt-contrib-clean": "~1.1",
+    "grunt-contrib-compress": "~1.4",
+    "grunt-contrib-concat": "~1.0",
+    "grunt-contrib-uglify": "~3.2",
+    "hashids": "~1.1",
+    "helmet": "~3.9",
+    "html-entities": "~1.2",
+    "jasmine": "^2.8.0",
+    "js-yaml": "3.10",
+    "jsonwebtoken": "~8",
+    "jssha": "~2.3",
+    "libxmljs": "~0.18",
+    "marsdb": "~0.6",
+    "morgan": "~1.9",
+    "multer": "~1.3",
+    "pdfkit": "~0.8",
+    "replace": "~0.3",
+    "request": "~2",
+    "sanitize-html": "1.4.2",
+    "sequelize": "~4",
+    "serve-favicon": "~2.4",
+    "serve-index": "~1.9",
+    "socket.io": "~2.0",
+    "sqlite3": "~3.1.13",
+    "z85": "~0.0"
+  },
+	
+	...
+
+Done	
 
 Creating the F5 WAF Policies
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
