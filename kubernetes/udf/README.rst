@@ -326,35 +326,8 @@ Now verify the WAF policy is valid
 
 Uncomment the **policies** field in the juiceshop VirtualServer and reapply
 
-.. code:: shell 
-
-	apiVersion: k8s.nginx.org/v1
-kind: VirtualServer
-metadata:
-  name: juiceshop
-spec:
-  host: juiceshop.example.com
-  #uncomment to enable WAF
-  #policies:
-  #- name: waf-policy
-  upstreams:
-  - name: juiceshop
-    service: juiceshop-svc
-    port: 80
-  routes:
-  - path: /
-    action:
-      proxy:
-        upstream: juiceshop
-        requestHeaders:
-          pass: true
-          set:
-          - name: Host
-            value: ' '
+ 
 	
-	kubectl apply -f virtual-server-juiceshop.yaml
-	
-
 
 DONE
 ~~~~
