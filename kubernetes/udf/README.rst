@@ -111,7 +111,8 @@ Now we can open firefox from the ocp-provisioner.
 .. image:: ./images/firefox-udf.png
 
 
-Enter **ext-authz.example.com** in the firefox address bar
+Enter **ext-authz.example.com** in the firefox address bar. We can see the application is telling us we are not authorized to access any data.
+Probably because we do not valid session cookie token.
 
 .. image:: ./images/firefox-extauthz.png
 
@@ -121,8 +122,8 @@ Enter **juiceshop.example.com** in the firefox address bar
 .. image:: ./images/firefox-juiceshop.png
  
 
-Attacking the Applications
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+Attacking the JuiceShop Application
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Now we will run attack vectors against both applications
 Once you SSH into kube-master1, run SQL injection attacks against the juiceshop application.
 
@@ -270,48 +271,43 @@ Now we will run a remote file inclusion attack #Poison Null Type HTTP injection,
     "sqlite3": "~3.1.13",
     "z85": "~0.0"
   },
-	
-	...
 
-Done	
+
+Attacking the Ext-Authz Application
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+As mentioned earlier, we knowthe ext authz application is using some form of authentication block unauthorized users from accessing sensitive data.
+If we can hijack the session cookie, we may be able to run a CRSF (Cross Site Request Forgery) attack to bypass this.
+
+.. code:: shell
+	
+	cd ~/agilitydocs/docs/class1/kubernetes/app-protect-waf/NAP-Attack-Demos/CSRF
+	/bin/bash client_attacks ext-authz.example.com
+	
+	**Output**
+
+	HTTP/1.1 200 OK
+	Server: nginx/1.29.8
+	Date: Thu, 11 Jun 2026 12:59:39 GMT
+	Content-Type: text/html; charset=utf-8
+	Content-Length: 47
+	Connection: keep-alive	
+	Set-Cookie: BIGipServer~AS3~A1~web_pool=201392394.57467.0000; path=/; Httponly
+
+	{ 'SSN': '123-45-6789', 'Password': 'ABC123!' }
+	
+
+Oh NO!! We extract very sensitive information associated to a user! We need to set WAF policies in place to protect these applications from these high severity attacks. May Day May DAY!!!
+	
 
 Creating the F5 WAF Policies
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-We are creating two WAF policies, one for each application. 
-
-
-
-
-
-
-
-Run the client attack script inside the attack type directory. For example, run the brute force attack.
-
-.. code:: shell 
-
-	cd Brute_Force_Attack
-	/bin/bash client_attacks <NGINX-ENDPOINT>
-
-
-Applying NGINX App Protect Policies
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Reference the policy inside the nginx config.
-
-.. code:: shell
-
-	cp Brute_Force_Attack/BruteForceAttack.json /etc/app_protect/conf 
-
-
-.. image:: ./images/nginx_config.png
-
+We need to create the WAF policy that is approproate for the application. Because juiceshop and ext-authz are different applications with different vulnerabilities, we will create two different WAF policies.
  
-Reload NGINX Plus
-
 .. code:: shell
+	
 
-	nginx -s reload
+
 
 DONE
 ~~~~
