@@ -329,8 +329,35 @@ Now verify the WAF policy is valid
 
 Uncomment the **policies** field in the juiceshop VirtualServer and reapply
 
- 
+.. image:: ./images/vs-waf-juiceshop.png
+
 	
+.. code:: shell
+
+	$ kubectl apply -f virtual-server-juiceshop.yaml
+
+Now run the attacks again against juiceshop application
+
+.. code:: shell
+
+	cd ~/agilitydocs/docs/class1/kubernetes/app-protect-waf/NAP-Attack-Demos/SQL_Injection
+	/bin/bash client_attacks juiceshop.example.com
+	cd ~/agilitydocs/docs/class1/kubernetes/app-protect-waf/NAP-Attack-Demos/Remote_File_Inclusion
+	/bin/bash client_attacks juiceshop.example.com
+
+	**Output**
+	HTTP/1.1 200 OK
+	Content-Type: text/html; charset=utf-8
+	Connection: close
+	Cache-Control: no-cache
+	Pragma: no-cache
+	Content-Length: 246
+	Set-Cookie: BIGipServer~AS3~A1~web_pool=201392394.57467.0000; path=/; Httponly
+
+	<html><head><title>Request Rejected</title></head><body>The requested URL was rejected. Please consult with your administrator.<br><br>Your support ID is: 8531163621729518412<br><br><a href='javascript:history.back();'>[Go Back]</a></body></html>
+	
+We can see attacks are now blocked. 
+
 
 DONE
 ~~~~
