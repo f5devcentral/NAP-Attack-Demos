@@ -313,8 +313,8 @@ Lets begin with creating the JuiceShop WAF policy
 	
 	cd ~/agilitydocs/docs/class1/kubernetes/app-protect-waf	
 	#Deploy SysLog pod for WAF Security logs. These can be exported to another UDP endpoint.
-	kubectl create -f syslog.pod
-	kubectl create -f ap-log.conf
+	kubectl create -f syslog.yaml
+	kubectl create -f ap-log.yaml
 	#Deploy the JuiceShop policy
 	kubectl create -f ap-apple-uds.yaml
 	kubectl create -f ap-dataguard-alarm-policy.yaml
@@ -356,8 +356,78 @@ Now run the attacks again against juiceshop application
 
 	<html><head><title>Request Rejected</title></head><body>The requested URL was rejected. Please consult with your administrator.<br><br>Your support ID is: 8531163621729518412<br><br><a href='javascript:history.back();'>[Go Back]</a></body></html>
 	
-We can see attacks are now blocked. 
+We can see attacks are now blocked. You can view the blocked events in detail from the syslog pod.
 
+.. code:: shell
+
+	$ kubectl exec -it $(kubectl get pod -l app=syslog -o jsonpath={.items..metadata.name}) -- cat /var/log/messages
+
+Creating the Ext-Authz WAF policy
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+As mentioned earlier, the JuiceShop WAF policy will not block CSRF attacks. It blocks base signature attacks (OWASP top 10) and safeguards sensitve information.
+We will create another WAF policy that will block CSRF attacks to address the vulnerability of the ext-authz application.
+
+.. code:: shell
+
+	cd ~/agilitydocs/docs/class1/kubernetes/app-protect-waf 
+        #Deploy the Ext-Authz WAF policy
+        kubectl create -f ap-csrf.yaml
+        kubectl create -f waf-csrf.yaml
+
+Verify both WAF policies are valid
+
+.. code:: shell
+
+	kubectl get policies.k8s.nginx.org	
+
+Now we can update the virtualserver exposing the ext-authz application and apply the WAF policy.
+
+.. image:: ./images/vs-waf-ext-authz.png
+
+.. code:: shell
+
+	kubectl apply -f virtual-server-ext-authz.yaml
+
+Verify both virtualservers are valid. 
+
+.. code:: shell
+
+	kubectl get virtualservers.k8s.nginx.org
+	**Output**
+	NAME        STATE   HOST                    IP    PORTS   AGE
+	ext-authz   Valid   ext-authz.example.com                 7d
+	juiceshop   Valid   juiceshop.example.com                 42h
+
+Run the CSRF attack against the ext-authz application
+
+.. code::shell 
+	
+	cd ~/agilitydocs/docs/class1/kubernetes/app-protect-waf/NAP-Attack-Demos/CSRF
+	/bin/bash client_attacks ext-authz.example.com
+	**Output**
+	HTTP/1.1 200 OK
+	Content-Type: text/html; charset=utf-8
+	Connection: close
+	Cache-Control: no-cache
+	Pragma: no-cache
+	Content-Length: 246
+	Set-Cookie: BIGipServer~AS3~A1~web_pool=218169610.57467.0000; path=/; Httponly
+
+	<html><head><title>Request Rejected</title></head><body>The requested URL was rejected	. Please consult with your administrator.<br><br>Your support ID is: 8258439757866909385<br><br><a href='javascript:history.back();'>[Go Back]</a></body></html>
+	
+The request is now rejected. 
+
+
+Segmenting WAF Policies with URI endpoints
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+
+	
+	
+ 
 
 DONE
 ~~~~
