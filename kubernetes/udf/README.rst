@@ -76,27 +76,25 @@ The NodePort of the service will align with the pool members configured in BIG-I
 
 Deploying the Applications
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Now we will deploy the juiceshop and ext-authz application
 
-Now we will deploy the juiceshop and ext-authz application
+#.. code:: shell
+#	kubectl create -f ~/agilitydocs/docs/class1/kubernetes/app-protect-waf/NAP-Attack-Demos/kubernetes/juiceshop.yaml
+#	kubectl create -f ~/agilitydocs/docs/class1/kubernetes/app-protect-waf/NAP-Attack-Demos/kubernetes/apps/deployment.yaml
 
-.. code:: shell
-
-	kubectl create -f ~/agilitydocs/docs/class1/kubernetes/app-protect-waf/NAP-Attack-Demos/kubernetes/juiceshop.yaml
-	kubectl create -f ~/agilitydocs/docs/class1/kubernetes/app-protect-waf/NAP-Attack-Demos/kubernetes/apps/deployment.yaml
-
-Verify the applications are runnning
+Verify the juiceshop and ext-authz applications are runnning
 
 .. code:: shell
 
 	kubectl get pods -o wide
 
 
-Now expose both applications with the NGINX VirtualServer CRDs
+Now expose both applications with Kubernetes Ingress Resources
 
 .. code:: shell
 
-	kubectl ~/agilitydocs/docs/class1/kubernetes/app-protect-waf/virtual-server-ext-authz.yaml
-	kubectl ~/agilitydocs/docs/class1/kubernetes/app-protect-waf/virtual-server-juiceshop.yaml
+	kubectl ~/agilitydocs/docs/class1/kubernetes/app-protect-waf/ingress-juiceshop.yaml
+	kubectl ~/agilitydocs/docs/class1/kubernetes/app-protect-waf/ingress-ext-authz.yaml
 
 Verify that the VirtualServer CRDs are applied correctly and valid
 
@@ -401,7 +399,7 @@ Verify both virtualservers are valid.
 
 Run the CSRF attack against the ext-authz application
 
-.. code::shell 
+.. code:: shell 
 	
 	cd ~/agilitydocs/docs/class1/kubernetes/app-protect-waf/NAP-Attack-Demos/CSRF
 	/bin/bash client_attacks ext-authz.example.com
@@ -419,12 +417,8 @@ Run the CSRF attack against the ext-authz application
 The request is now rejected. 
 
 
-Segmenting WAF Policies with URI endpoints
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-
-
+Converting ASM policies to F5 WAF for NGINX
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	
 	
  
