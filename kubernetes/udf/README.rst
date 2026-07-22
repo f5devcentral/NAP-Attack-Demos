@@ -76,11 +76,6 @@ The NodePort of the service will align with the pool members configured in BIG-I
 
 Deploying the Applications
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
-#Now we will deploy the juiceshop and ext-authz application
-
-#.. code:: shell
-#	kubectl create -f ~/agilitydocs/docs/class1/kubernetes/app-protect-waf/NAP-Attack-Demos/kubernetes/juiceshop.yaml
-#	kubectl create -f ~/agilitydocs/docs/class1/kubernetes/app-protect-waf/NAP-Attack-Demos/kubernetes/apps/deployment.yaml
 
 Verify the juiceshop and ext-authz applications are runnning
 
@@ -96,11 +91,16 @@ Now expose both applications with Kubernetes Ingress Resources
 	kubectl ~/agilitydocs/docs/class1/kubernetes/app-protect-waf/ingress-juiceshop.yaml
 	kubectl ~/agilitydocs/docs/class1/kubernetes/app-protect-waf/ingress-ext-authz.yaml
 
-Verify that the VirtualServer CRDs are applied correctly and valid
+Verify that the Ingress Resources are applied correctly and valid
 
 .. code:: shell	
     
-        kubectl get virtualservers.k8s.nginx.org 
+        kubectl get ing
+
+	NAME                CLASS   HOSTS                   ADDRESS   PORTS   AGE
+	ext-authz-ingress   nginx   ext-authz.example.com             80      3h23m
+	juiceshop           nginx   juiceshop.example.com             80      3h8m
+
 
 Running the Firefox Browser and Connect to Applications
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
