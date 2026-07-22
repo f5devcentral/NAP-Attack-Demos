@@ -325,14 +325,14 @@ Now verify the WAF policy is valid
 
 	kubectl get policies.k8s.nginx.org 
 
-Uncomment the **policies** field in the juiceshop VirtualServer and reapply
+Uncomment the **annotations** field in the juiceshop ingress resource and reapply
 
-.. image:: ./images/vs-waf-juiceshop.png
+.. image:: ./images/Ingress-Waf-Juiceshop.png
 
 	
 .. code:: shell
 
-	$ kubectl apply -f virtual-server-juiceshop.yaml
+	$ kubectl apply -f ingress-juiceshop.yaml
 
 Now run the attacks again against juiceshop application
 
@@ -381,21 +381,22 @@ Verify both WAF policies are valid
 
 Now we can update the virtualserver exposing the ext-authz application and apply the WAF policy.
 
-.. image:: ./images/vs-waf-ext-authz.png
+.. image:: ./images/Ingress-Waf-Ext-Authz.png
 
 .. code:: shell
 
-	kubectl apply -f virtual-server-ext-authz.yaml
+	kubectl apply -f ingress-ext-authz.yaml
 
-Verify both virtualservers are valid. 
+Verify both ingress resources are valid. 
 
 .. code:: shell
 
-	kubectl get virtualservers.k8s.nginx.org
+	kubectl get ing
+
 	**Output**
-	NAME        STATE   HOST                    IP    PORTS   AGE
-	ext-authz   Valid   ext-authz.example.com                 7d
-	juiceshop   Valid   juiceshop.example.com                 42h
+	NAME                CLASS   HOSTS                   ADDRESS   PORTS   AGE
+        ext-authz-ingress   nginx   ext-authz.example.com             80      3h23m
+        juiceshop           nginx   juiceshop.example.com             80      3h8m
 
 Run the CSRF attack against the ext-authz application
 
@@ -419,7 +420,6 @@ The request is now rejected.
 
 Converting ASM policies to F5 WAF for NGINX
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	
 	
  
 
